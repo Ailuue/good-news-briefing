@@ -12,6 +12,6 @@ venv/
 *.sqlite3
 good-news/
 
-# Editor local history (may contain pre-refactor secrets)
+# Editor local history (may contain secrets)
 .history/
 .vscode/

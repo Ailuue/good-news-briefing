@@ -52,8 +52,8 @@ Edit `.env` with your own values:
 
 In LM Studio: load your chat and embedding models, start the server, and bind it
 to `0.0.0.0` so other machines on the LAN can reach it. Copy the exact model ids
-from the server panel into `CHAT_MODEL` / `EMBED_MODEL` near the top of
-`good_news_briefing.py` if they differ from the defaults.
+from the server panel into `CHAT_MODEL` / `EMBED_MODEL` in `src/good_news/config.py`
+if they differ from the defaults.
 
 ## Usage
 
@@ -90,13 +90,20 @@ Gmail's SMTP needs an **app password**, not your normal password:
 
 ## Configuration
 
-The knobs worth tuning live at the top of `good_news_briefing.py`:
+The code lives in the `src/good_news/` package; the knobs worth tuning live in
+two files:
 
-- **`CRITERIA`** — the editorial point of view: what counts as "good news."
-  This is the one knob worth rewriting to taste.
-- **`FEEDS`** — the list of RSS sources.
-- `CHAT_MODEL`, `EMBED_MODEL`, `THINKING` — model ids and the Qwen reasoning toggle.
-- `OPTIMISM_THRESHOLD`, `DEDUPE_SIMILARITY`, `MAX_PER_CATEGORY`, `MAX_ENTRIES_PER_FEED`.
+- `src/good_news/prompts.py`
+  - **`CRITERIA`** — the editorial point of view: what counts as "good news."
+    This is the one knob worth rewriting to taste.
+- `src/good_news/config.py`
+  - **`FEEDS`** — the list of RSS sources.
+  - `CHAT_MODEL`, `EMBED_MODEL`, `THINKING` — model ids and the Qwen reasoning toggle.
+  - `OPTIMISM_THRESHOLD`, `DEDUPE_SIMILARITY`, `MAX_PER_CATEGORY`, `MAX_ENTRIES_PER_FEED`.
+
+Run it with `python3 good_news_briefing.py ...` from a source checkout, or
+`pip install -e .` and then use `python3 -m good_news ...` (or the `good-news`
+console script).
 
 ## Output
 
