@@ -1,0 +1,373 @@
+[
+  {
+    "id": "env_1",
+    "description": "volunteers reforest degraded land",
+    "article": {
+      "title": "Community volunteers plant 50,000 trees on eroded hillside",
+      "summary": "Over 2,000 volunteers in Portugal spent three weekends this autumn planting native trees across 400 hectares of land scorched by wildfires, with funding from a local municipality grant.",
+      "source": "Positive News",
+      "link": "https://example.com/eval/env_1",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": true,
+      "category": "environment"
+    }
+  },
+  {
+    "id": "env_2",
+    "description": "EU bans disposable vapes to cut plastic waste",
+    "article": {
+      "title": "EU bans single-use vapes to slash plastic and battery waste",
+      "summary": "The European Union passed a regulation phasing out disposable e-cigarettes by 2025, citing over 300 million units discarded annually and the toxic battery materials they contain.",
+      "source": "The Guardian",
+      "link": "https://example.com/eval/env_2",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": true,
+      "category": "environment"
+    }
+  },
+  {
+    "id": "com_1",
+    "description": "mutual aid network delivers meals to housebound elders",
+    "article": {
+      "title": "Neighborhood volunteers deliver 200 hot meals daily to housebound elders",
+      "summary": "A mutual aid group in Chicago's South Side has been cooking and delivering free hot meals to over 200 elderly residents since 2020, funded entirely by community donations and staffed by 80 rotating volunteers.",
+      "source": "Block Club Chicago",
+      "link": "https://example.com/eval/com_1",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": true,
+      "category": "community_helping"
+    }
+  },
+  {
+    "id": "com_2",
+    "description": "community fundraises to rebuild flood victim's home",
+    "article": {
+      "title": "Town raises $180,000 to rebuild home of family who lost everything in flood",
+      "summary": "After a family in rural Kentucky lost their house and belongings to flash flooding, neighbors and strangers online raised $180,000 in two weeks to cover rebuilding costs, declining a developer's offer to buy the land.",
+      "source": "Good News Network",
+      "link": "https://example.com/eval/com_2",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": true,
+      "category": "community_helping"
+    }
+  },
+  {
+    "id": "anti_1",
+    "description": "Amazon warehouse workers vote to unionize",
+    "article": {
+      "title": "Amazon warehouse workers vote to unionize in landmark victory",
+      "summary": "Workers at a large Amazon fulfillment center in Bessemer, Alabama voted 615-to-430 to join the Retail, Wholesale and Department Store Union, citing unsafe working conditions and unachievable productivity quotas.",
+      "source": "Labor Notes",
+      "link": "https://example.com/eval/anti_1",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": true,
+      "category": "anti_corporate"
+    }
+  },
+  {
+    "id": "anti_2",
+    "description": "FTC blocks telecom merger on consumer harm grounds",
+    "article": {
+      "title": "FTC blocks proposed merger of two largest regional broadband providers",
+      "summary": "The Federal Trade Commission voted to block a $40 billion merger between the country's two largest cable companies, ruling that the deal would reduce competition in 18 states and harm consumers with higher prices and fewer service options.",
+      "source": "Ars Technica",
+      "link": "https://example.com/eval/anti_2",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": true,
+      "category": "anti_corporate"
+    }
+  },
+  {
+    "id": "anti_3",
+    "description": "restaurant chain ordered to repay stolen wages",
+    "article": {
+      "title": "Restaurant chain ordered to repay $4.2 million in stolen wages to workers",
+      "summary": "A whistleblower lawsuit revealed that a national fast-food chain had systematically underpaid 3,800 workers by deleting overtime hours from payroll records. A federal judge ordered full restitution plus damages.",
+      "source": "In These Times",
+      "link": "https://example.com/eval/anti_3",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": true,
+      "category": "anti_corporate"
+    }
+  },
+  {
+    "id": "tech_1",
+    "description": "EU court orders Meta to stop behavioral ad targeting",
+    "article": {
+      "title": "EU court orders Meta to stop behavioral ad targeting without explicit consent",
+      "summary": "Europe's top court ruled that Meta violated the GDPR by harvesting personal data for targeted advertising without meaningful user consent, ordering the company to delete illegally collected profiles affecting 400 million users.",
+      "source": "Electronic Frontier Foundation",
+      "link": "https://example.com/eval/tech_1",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": true,
+      "category": "technology"
+    }
+  },
+  {
+    "id": "tech_2",
+    "description": "right-to-repair law passes in three states",
+    "article": {
+      "title": "Three more states pass right-to-repair laws covering phones and farm equipment",
+      "summary": "Colorado, Minnesota, and Massachusetts enacted right-to-repair legislation requiring manufacturers to provide independent repair shops and individual owners with access to parts, tools, and software diagnostics.",
+      "source": "iFixit",
+      "link": "https://example.com/eval/tech_2",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": true,
+      "category": "technology"
+    }
+  },
+  {
+    "id": "sci_1",
+    "description": "malaria vaccine 82% efficacy in Phase 3 trial",
+    "article": {
+      "title": "Malaria vaccine shows 82% efficacy in African children in Phase 3 trial",
+      "summary": "Oxford University's R21 malaria vaccine demonstrated 82% efficacy in a Phase 3 trial involving 4,800 children across four African countries, the most effective malaria vaccine ever tested and positioned for rapid rollout.",
+      "source": "The Lancet",
+      "link": "https://example.com/eval/sci_1",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": true,
+      "category": "science_health"
+    }
+  },
+  {
+    "id": "sci_2",
+    "description": "Alzheimer's drug slows cognitive decline in large trial",
+    "article": {
+      "title": "New Alzheimer's drug slows cognitive decline by 35% in large trial",
+      "summary": "A Phase 3 clinical trial of lecanemab involving 1,800 patients showed a 35% slowing of cognitive decline compared to placebo over 18 months, with FDA full approval and Medicare coverage expanding access.",
+      "source": "New England Journal of Medicine",
+      "link": "https://example.com/eval/sci_2",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": true,
+      "category": "science_health"
+    }
+  },
+  {
+    "id": "pol_1",
+    "description": "city passes strongest-ever tenant protections",
+    "article": {
+      "title": "City council passes strongest tenant protections in state history",
+      "summary": "The council voted 8-to-1 to expand rent stabilization, ban no-cause evictions, and require landlords to provide two months' notice before any rent increases, protecting 140,000 renters in rent-stabilized units.",
+      "source": "City Bureau",
+      "link": "https://example.com/eval/pol_1",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": true,
+      "category": "politics_social"
+    }
+  },
+  {
+    "id": "pol_2",
+    "description": "federal court strikes down discriminatory voter ID law",
+    "article": {
+      "title": "Federal appeals court strikes down voter ID law as discriminatory",
+      "summary": "The 4th Circuit Court ruled 2-to-1 that a state's photo ID voting requirement disproportionately burdened Black voters and lacked evidence of the fraud it claimed to prevent, restoring ballot access for an estimated 250,000 voters.",
+      "source": "Vox",
+      "link": "https://example.com/eval/pol_2",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": true,
+      "category": "politics_social"
+    }
+  },
+  {
+    "id": "excl_profit",
+    "description": "exclude: corporate profit record",
+    "article": {
+      "title": "Apple posts record $24 billion quarterly profit on iPhone sales surge",
+      "summary": "Apple Inc. reported $24.2 billion in quarterly net income, beating analyst expectations by 12%, driven by strong iPhone 16 sales in China and services revenue growth.",
+      "source": "Wall Street Journal",
+      "link": "https://example.com/eval/excl_profit",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": false
+    }
+  },
+  {
+    "id": "excl_stock",
+    "description": "exclude: stock market milestone",
+    "article": {
+      "title": "S&P 500 closes above 6,000 for the first time as tech stocks rally",
+      "summary": "The S&P 500 index closed above 6,000 for the first time in history, propelled by better-than-expected earnings from seven major technology companies.",
+      "source": "CNBC",
+      "link": "https://example.com/eval/excl_stock",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": false
+    }
+  },
+  {
+    "id": "excl_luck_lottery",
+    "description": "exclude: lottery win, no human kindness",
+    "article": {
+      "title": "Retired teacher wins $42 million lottery jackpot",
+      "summary": "A 68-year-old retired teacher from Ohio won the $42 million Powerball jackpot, becoming the third winner from the state this year. She said she plans to buy a boat.",
+      "source": "Good News Network",
+      "link": "https://example.com/eval/excl_luck_lottery",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": false,
+      "is_pure_luck": true
+    }
+  },
+  {
+    "id": "excl_greenwash",
+    "description": "exclude: oil company greenwashing pledge",
+    "article": {
+      "title": "BP announces 'ambitious' net-zero pledge and green investment fund",
+      "summary": "BP committed to reaching net-zero emissions by 2050 and announced a $5 billion green technology investment fund, while separately announcing plans to increase oil and gas production by 15% over the next decade.",
+      "source": "Reuters",
+      "link": "https://example.com/eval/excl_greenwash",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": false,
+      "is_corporate_pr": true
+    }
+  },
+  {
+    "id": "excl_ceo_charity",
+    "description": "exclude: CEO charity donation after PR scandal",
+    "article": {
+      "title": "Meta CEO donates $1 billion to Bay Area housing fund following congressional testimony",
+      "summary": "Mark Zuckerberg pledged $1 billion to address Bay Area housing shortage days after testifying before Congress about Meta's data privacy practices, his largest single philanthropic commitment.",
+      "source": "San Francisco Chronicle",
+      "link": "https://example.com/eval/excl_ceo_charity",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": false,
+      "is_corporate_pr": true
+    }
+  },
+  {
+    "id": "excl_neutral",
+    "description": "exclude: neutral policy announcement, no concrete outcome",
+    "article": {
+      "title": "Mayor announces task force to study public transit options",
+      "summary": "The city's mayor announced a 12-member task force that will study options for improving public transit over the next 18 months and deliver a non-binding report to the city council.",
+      "source": "Local Gazette",
+      "link": "https://example.com/eval/excl_neutral",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": false
+    }
+  },
+  {
+    "id": "edge_luck_with_kindness",
+    "description": "edge: found money returned to owner — luck, but human kindness at the core",
+    "article": {
+      "title": "Construction worker finds $120,000 cash, tracks down owner and returns it all",
+      "summary": "A day laborer in Los Angeles found a bag containing $120,000 cash at a bus stop, spent two days locating the owner through neighborhood networks, and returned the entire amount despite his own family's financial hardship.",
+      "source": "Los Angeles Times",
+      "link": "https://example.com/eval/edge_luck_with_kindness",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": true,
+      "category": "community_helping"
+    }
+  },
+  {
+    "id": "edge_luck_no_kindness",
+    "description": "edge: lost dog walks home — heartwarming but pure luck, no human kindness driving it",
+    "article": {
+      "title": "Lost dog walks 60 miles home after escaping shelter",
+      "summary": "A three-year-old Labrador named Scout walked approximately 60 miles over four days to return to her original home after escaping from the shelter she had been placed in following her owner's death.",
+      "source": "The Dodo",
+      "link": "https://example.com/eval/edge_luck_no_kindness",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": false,
+      "is_pure_luck": true
+    }
+  },
+  {
+    "id": "edge_both_sides",
+    "description": "edge: 'both sides' framing of restoring civil rights",
+    "article": {
+      "title": "City debates controversial proposal to restore voting rights for formerly incarcerated",
+      "summary": "City council members clashed Tuesday over a proposal to restore voting rights to residents with felony convictions, with supporters citing rehabilitation and critics expressing concerns about public safety and election integrity.",
+      "source": "Local Gazette",
+      "link": "https://example.com/eval/edge_both_sides",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": false
+    }
+  },
+  {
+    "id": "edge_nurses_strike",
+    "description": "edge: workers win long strike with concrete gains",
+    "article": {
+      "title": "Nurses end 14-month strike with contract guaranteeing safe staffing ratios",
+      "summary": "Over 4,000 nurses at a regional hospital chain ratified a new three-year contract after a 14-month strike, securing legally binding nurse-to-patient ratios, a 22% pay increase, and expanded mental health benefits.",
+      "source": "Jacobin",
+      "link": "https://example.com/eval/edge_nurses_strike",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": true,
+      "category": "anti_corporate"
+    }
+  },
+  {
+    "id": "edge_greenwash_with_expansion",
+    "description": "edge: oil company touts tiny emissions drop while expanding drilling",
+    "article": {
+      "title": "Shell reports 3% emissions drop, calls it 'climate milestone'",
+      "summary": "Shell reported a 3% reduction in Scope 1 and 2 emissions compared to the prior year while announcing three new deepwater drilling projects expected to produce 800,000 barrels per day at peak.",
+      "source": "Shell press release",
+      "link": "https://example.com/eval/edge_greenwash_with_expansion",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": false,
+      "is_corporate_pr": true
+    }
+  },
+  {
+    "id": "edge_open_source_privacy",
+    "description": "edge: nonprofit releases open-source privacy tool",
+    "article": {
+      "title": "Mozilla open-sources privacy-preserving ad measurement system",
+      "summary": "Mozilla released the full source code for its privacy-preserving ad measurement tool under an Apache 2.0 license, allowing independent auditors to verify that it measures ad effectiveness without tracking individual users or sharing data with advertisers.",
+      "source": "Mozilla Blog",
+      "link": "https://example.com/eval/edge_open_source_privacy",
+      "is_reddit_article": false
+    },
+    "expect": {
+      "is_good_news": true,
+      "category": "technology"
+    }
+  }
+]
