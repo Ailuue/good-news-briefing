@@ -81,4 +81,4 @@ def _space_items(text: str) -> str:
     than asking the model to get it right.
     """
     text = re.sub(r"(?m)^(https?://\S+)[ \t]*\n+", r"\1\n\n", text)
-    return text.strip() + "\n"
+    return text.rstrip("\n")

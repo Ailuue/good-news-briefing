@@ -75,3 +75,17 @@ def test_restore_links_warns_on_model_written_url(capsys):
 def test_restore_links_warns_on_unresolved_marker(capsys):
     restore_links("ref @@9@@", _items())
     assert "unresolved link marker" in capsys.readouterr().err
+
+
+def test_restore_links_separates_items_with_blank_line():
+    # Regression: without a blank line between items a category collapses into
+    # one run-on markdown paragraph. Each link on its own line gets one after it.
+    digest = "Sentence one.\n@@1@@\nSentence two.\n@@2@@"
+    out = restore_links(digest, _items())
+    assert out == (
+        "Sentence one.\n"
+        "https://example.com/a\n"
+        "\n"
+        "Sentence two.\n"
+        "https://example.com/b"
+    )
