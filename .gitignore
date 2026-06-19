@@ -1,0 +1,17 @@
+# Secrets / local settings
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Local data / generated briefings
+*.sqlite3
+good-news/
+
+# Editor local history (may contain pre-refactor secrets)
+.history/
+.vscode/
