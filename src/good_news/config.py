@@ -66,8 +66,9 @@ DIGEST_THINKING = False
 
 # Upper bound on the digest completion. Without an explicit cap LM Studio applies
 # its own default limit, which truncates the briefing mid-sentence once enough
-# items pass the filter. Sized to comfortably fit a full multi-category digest.
-DIGEST_MAX_TOKENS = 8000
+# items pass the filter. Sized to comfortably fit a full multi-category digest
+# with up to 25 items (thinking is disabled, so all tokens go to output).
+DIGEST_MAX_TOKENS = 16000
 
 # ----------------------------------------------------------------------
 # PIPELINE THRESHOLDS
