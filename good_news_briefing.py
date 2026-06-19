@@ -229,8 +229,10 @@ VERDICT_SCHEMA = {
 
 DIGEST_PROMPT = """You are writing a warm, concise evening briefing of good news for one reader who
 may read it to unwind before bed or save it for the next morning.
-Group the items under short thematic headers. For each item, write one or two sentences in your own
-words about why it is encouraging, then put the link on its own line. Be genuine and grounded, never
+Group the items under short thematic headers. For each item, write a single sentence in your own
+words that conveys what happened and why it matters, then put the link on its own line. Vary your
+sentence openings across items and never use a fixed formula like "It's encouraging because"; let the
+hopefulness come through in the substance rather than by naming it. Be genuine and grounded, never
 saccharine or patronizing. Keep the tone calm and steadying rather than activating. Open with a
 single short line that sets a hopeful, restful tone.
 Output Markdown only."""
