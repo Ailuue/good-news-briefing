@@ -31,6 +31,8 @@ import subprocess
 import sys
 import math
 import os
+import re
+from html.parser import HTMLParser
 from typing import Any, cast
 from openai import OpenAI
 import feedparser
@@ -43,7 +45,10 @@ try:
 
     os.environ.setdefault("SSL_CERT_FILE", certifi.where())
 except ImportError:
-    print("  ! certifi not installed; HTTPS feeds may fail (pip install certifi)", file=sys.stderr)
+    print(
+        "  ! certifi not installed; HTTPS feeds may fail (pip install certifi)",
+        file=sys.stderr,
+    )
 
 # Load private/local settings from a .env file next to this script (gitignored).
 # Real environment variables take precedence, so nothing here is required.
@@ -52,7 +57,10 @@ try:
 
     load_dotenv(pathlib.Path(__file__).with_name(".env"))
 except ImportError:
-    print("  ! python-dotenv not installed; relying on real env vars (pip install python-dotenv)", file=sys.stderr)
+    print(
+        "  ! python-dotenv not installed; relying on real env vars (pip install python-dotenv)",
+        file=sys.stderr,
+    )
 
 
 def _env_list(name: str, default: str = "") -> list[str]:
@@ -77,10 +85,17 @@ EMBED_MODEL = "qwen3-embedding-0.6b"  # tiny; co-loads with the chat model fine
 # Set True only if you ever want it to deliberate (slower).
 THINKING = False
 
-MAX_PER_CATEGORY = 4
+MAX_PER_CATEGORY = 5
 OPTIMISM_THRESHOLD = 0.55  # 0..1; raise to be pickier
 DEDUPE_SIMILARITY = 0.86  # cosine above this = treat as the same story
-MAX_ENTRIES_PER_FEED = 25
+MAX_ENTRIES_PER_FEED = 35
+# Reddit's RSS links to the comments page, and its "summary" is just the
+# submission blurb. When True, swap in the real article URL and crawl the
+# article body so the model judges the story, not the reddit post. Adds a
+# network fetch per reddit item; failures fall back to the RSS summary.
+FETCH_REDDIT_ARTICLES = True
+ARTICLE_FETCH_TIMEOUT = 15  # seconds per article crawl
+ARTICLE_MAX_CHARS = 4000  # trim crawled body before sending to the model
 OUT_DIR = pathlib.Path.home() / "good-news"
 DB_PATH = OUT_DIR / "seen.sqlite3"
 OPEN_WHEN_DONE = True  # `open` the file on macOS when finished
@@ -241,6 +256,81 @@ def mark_seen(con, link: str) -> None:
     )
 
 
+# Reddit RSS entries carry their submission as HTML containing a "[link]"
+# anchor (the submitted article) and a "[comments]" anchor (the thread).
+_REDDIT_LINK_RE = re.compile(r'href="([^"]+)"[^>]*>\s*\[link\]', re.IGNORECASE)
+
+
+def reddit_external_link(entry: Any) -> str:
+    """Return the real article URL a reddit post links to, or '' if there is
+    none. entry.link points at the comments page; the submitted URL lives in
+    the [link] anchor of the entry's HTML. Self-posts point [link] back at
+    reddit, so those (and non-reddit entries) return ''."""
+    html = ""
+    contents = entry.get("content") or []
+    if contents:
+        html = contents[0].get("value", "") or ""
+    html = html or entry.get("summary", "") or ""
+    m = _REDDIT_LINK_RE.search(html)
+    if not m:
+        return ""
+    url = m.group(1).replace("&amp;", "&")
+    return "" if "reddit.com" in url else url
+
+
+class _TextExtractor(HTMLParser):
+    """Collect human-readable text, skipping non-content tags. Good enough to
+    give the classifier the gist of an article without pulling in a readability
+    dependency."""
+
+    _SKIP = {"script", "style", "noscript", "head", "nav", "footer", "header",
+             "aside", "form", "svg"}
+
+    def __init__(self) -> None:
+        super().__init__()
+        self._skip_depth = 0
+        self.parts: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: Any) -> None:
+        if tag in self._SKIP:
+            self._skip_depth += 1
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag in self._SKIP and self._skip_depth:
+            self._skip_depth -= 1
+
+    def handle_data(self, data: str) -> None:
+        if self._skip_depth == 0:
+            text = data.strip()
+            if text:
+                self.parts.append(text)
+
+
+def fetch_article_text(url: str, max_chars: int = ARTICLE_MAX_CHARS) -> str:
+    """Best-effort crawl of an article's readable text. Returns '' on any
+    failure so the caller can fall back to the RSS summary. Uses httpx, which
+    ships with the openai dependency (no extra install)."""
+    try:
+        import httpx
+
+        r = httpx.get(
+            url,
+            follow_redirects=True,
+            timeout=ARTICLE_FETCH_TIMEOUT,
+            headers={"User-Agent": "Mozilla/5.0 (good-news-briefing)"},
+        )
+        r.raise_for_status()
+        if "html" not in r.headers.get("content-type", "").lower():
+            return ""  # PDFs, images, etc. -- nothing to extract
+        parser = _TextExtractor()
+        parser.feed(r.text)
+        text = " ".join(parser.parts)
+        return re.sub(r"\s+", " ", text).strip()[:max_chars]
+    except Exception as e:
+        print(f"  ! article fetch failed {url}: {e}", file=sys.stderr)
+        return ""
+
+
 def fetch(per_feed: int = MAX_ENTRIES_PER_FEED) -> list[dict]:
     out = []
     for url in FEEDS:
@@ -256,12 +346,23 @@ def fetch(per_feed: int = MAX_ENTRIES_PER_FEED) -> list[dict]:
             continue
         src = d.feed.get("title", url)
         for e in d.entries[:per_feed]:
+            link = e.get("link", "")
+            # For reddit link-posts, point at the article instead of the
+            # comments page and remember to crawl it. Self-posts have no
+            # external link, so leave them as-is.
+            is_reddit_article = False
+            if "reddit.com" in link:
+                ext = reddit_external_link(e)
+                if ext:
+                    link = ext
+                    is_reddit_article = True
             out.append(
                 {
                     "title": (e.get("title") or "").strip(),
                     "summary": (e.get("summary") or e.get("description") or "")[:1200],
-                    "link": e.get("link", ""),
+                    "link": link,
                     "source": src,
+                    "is_reddit_article": is_reddit_article,
                 }
             )
     return out
@@ -419,6 +520,12 @@ def main(
 
     kept = []
     for a in fresh:
+        # Reddit's RSS summary is just the submission blurb, so crawl the real
+        # article and judge the model on that instead of the reddit post.
+        if FETCH_REDDIT_ARTICLES and a.get("is_reddit_article"):
+            body = fetch_article_text(a["link"])
+            if body:
+                a["summary"] = body
         v = classify(a["title"], a["summary"], a["source"])
         if con is not None:
             mark_seen(con, a["link"])
