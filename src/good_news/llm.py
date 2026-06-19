@@ -95,10 +95,39 @@ def embed(texts: list[str]) -> list[list[float]]:
     return [d.embedding for d in resp.data]
 
 
+# Each item is tagged with an @@N@@ marker the model echoes onto the link line;
+# we swap markers for real links after generation. The model paraphrases URLs
+# (turning reasonstobecheerful.world into a dead reasonsbecheerful.world), so it
+# never sees or writes a URL -- it only copies the opaque marker.
+_LINK_MARK_RE = re.compile(r"@@(\d+)@@")
+
+
+def _restore_links(text: str, items: list[Article]) -> str:
+    """Replace @@N@@ markers with the real link for items[N-1]."""
+
+    def sub(m: re.Match[str]) -> str:
+        idx = int(m.group(1))
+        return items[idx - 1].link if 1 <= idx <= len(items) else m.group(0)
+
+    # Check the raw output (not the substituted result, which is all real links):
+    # a URL here means the model wrote one despite being told to copy markers.
+    if "http" in text:
+        print("  ! digest contains a model-written URL (markers expected)", file=sys.stderr)
+    restored = _LINK_MARK_RE.sub(sub, text)
+    # Markers the model dropped or mangled instead of echoing them verbatim.
+    if leftover := _LINK_MARK_RE.findall(restored):
+        print(
+            f"  ! digest left {len(leftover)} unresolved link marker(s)",
+            file=sys.stderr,
+        )
+    return restored
+
+
 def write_digest(items: list[Article]) -> str:
     payload = (
         "\n\n".join(
-            f"[{it.category}] {it.title}\n{it.reason}\n{it.link}" for it in items
+            f"[{it.category}] {it.title}\n{it.reason}\n@@{i}@@"
+            for i, it in enumerate(items, 1)
         )
         + think_suffix()
     )
@@ -126,4 +155,4 @@ def write_digest(items: list[Article]) -> str:
             "model returned no digest text (it likely emitted only reasoning); "
             "disable thinking for the digest call."
         )
-    return text
+    return _restore_links(text, items)
