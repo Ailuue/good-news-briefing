@@ -127,4 +127,7 @@ FEEDS = [
     "https://www.yesmagazine.org/feed",
     # community / humans helping humans
     "https://www.reddit.com/r/UpliftingNews/.rss",
+    # major outlets — good/uplifting filtered sections
+    "https://feeds.bbci.co.uk/news/topics/cx2pk70323et/rss.xml",  # BBC Uplifting Stories
+    "https://www.theguardian.com/world/series/the-upside/rss",    # Guardian: The Upside (verify in browser)
 ]
