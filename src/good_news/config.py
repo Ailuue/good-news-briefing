@@ -52,12 +52,19 @@ BASE_URL = f"http://{PC_HOST}:1234/v1"
 # leaves room for context + the embedding model. Copy the EXACT ids from the
 # LM Studio server panel after loading each model.
 CHAT_MODEL = "unsloth/qwen3.6-35b-a3b"  # load the IQ4_XS (or MTP) GGUF in LM Studio
-EMBED_MODEL = "text-embedding-qwen3-embedding-0.6b"  # tiny; co-loads with the chat model fine
+EMBED_MODEL = (
+    "text-embedding-qwen3-embedding-0.6b"  # tiny; co-loads with the chat model fine
+)
 
 # Qwen3 reasoning toggle. False appends "/no_think" so the model skips reasoning
 # tokens -- much faster, which is what you want for high-volume classification.
 # Set True only if you ever want it to deliberate (slower).
 THINKING = False
+
+# Upper bound on the digest completion. Without an explicit cap LM Studio applies
+# its own default limit, which truncates the briefing mid-sentence once enough
+# items pass the filter. Sized to comfortably fit a full multi-category digest.
+DIGEST_MAX_TOKENS = 8000
 
 # ----------------------------------------------------------------------
 # PIPELINE THRESHOLDS

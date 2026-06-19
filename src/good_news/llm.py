@@ -6,6 +6,7 @@ pointed at the LAN host. The model is local, so the api_key can be anything.
 
 from __future__ import annotations
 import json
+import re
 import sys
 from typing import Any, cast
 from openai import OpenAI
@@ -22,6 +23,16 @@ def think_suffix() -> str:
     return "" if config.THINKING else " /no_think"
 
 
+def think_extra_body() -> dict[str, Any]:
+    """Server-side thinking toggle for Qwen3 over the OpenAI API.
+
+    The '/no_think' prompt suffix is unreliable on some Qwen3.6 builds, so also
+    pass the chat template's `enable_thinking` flag, which the server applies
+    when rendering the prompt. Belt-and-suspenders with think_suffix().
+    """
+    return {"chat_template_kwargs": {"enable_thinking": config.THINKING}}
+
+
 def message_text(msg: Any) -> str:
     """Pull the answer text out of a chat message.
 
@@ -33,6 +44,23 @@ def message_text(msg: Any) -> str:
     if content:
         return content
     return (getattr(msg, "reasoning_content", None) or "").strip()
+
+
+# Qwen3 wraps reasoning in <think>...</think>. When a build inlines that into
+# `content` instead of a separate reasoning_content field, strip it out so the
+# chain-of-thought never reaches the reader.
+_THINK_RE = re.compile(r"<think>.*?</think>", re.DOTALL)
+
+
+def answer_text(msg: Any) -> str:
+    """The model's FINAL answer only -- never its reasoning.
+
+    Unlike message_text(), this deliberately does NOT fall back to
+    reasoning_content: on builds that emit a chain-of-thought, that field holds
+    raw thinking, which must never be surfaced to the reader. Blank content here
+    means the model was still reasoning when it stopped, so there is no answer.
+    """
+    return _THINK_RE.sub("", msg.content or "").strip()
 
 
 def classify(article: Article) -> Verdict | None:
@@ -54,6 +82,7 @@ def classify(article: Article) -> Verdict | None:
             response_format=cast(
                 Any, {"type": "json_schema", "json_schema": VERDICT_SCHEMA}
             ),
+            extra_body=think_extra_body(),
         )
         return Verdict.from_json(json.loads(message_text(resp.choices[0].message)))
     except Exception as e:
@@ -76,9 +105,25 @@ def write_digest(items: list[Article]) -> str:
     resp = client.chat.completions.create(
         model=config.CHAT_MODEL,
         temperature=0.7,
+        max_tokens=config.DIGEST_MAX_TOKENS,
         messages=[
             {"role": "system", "content": DIGEST_PROMPT},
             {"role": "user", "content": payload},
         ],
+        extra_body=think_extra_body(),
     )
-    return message_text(resp.choices[0].message)
+    choice = resp.choices[0]
+    # Truncation mid-reasoning is exactly how the chain-of-thought leaked into a
+    # briefing before. Fail loudly instead of returning a half-baked digest.
+    if choice.finish_reason == "length":
+        raise RuntimeError(
+            f"digest hit the {config.DIGEST_MAX_TOKENS}-token cap before finishing; "
+            "raise DIGEST_MAX_TOKENS or disable the model's thinking."
+        )
+    text = answer_text(choice.message)
+    if not text:
+        raise RuntimeError(
+            "model returned no digest text (it likely emitted only reasoning); "
+            "disable thinking for the digest call."
+        )
+    return text
