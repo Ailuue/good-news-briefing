@@ -66,12 +66,14 @@ def embed(texts: list[str]) -> list[list[float]]:
 
 
 def write_digest(items: list[Article]) -> str:
+    no_think_suffix = "" if config.DIGEST_THINKING else " /no_think"
+    no_think_body = {"chat_template_kwargs": {"enable_thinking": config.DIGEST_THINKING}}
     payload = (
         "\n\n".join(
             f"[{it.category}] {it.title}\n{it.reason}\n@@{i}@@"
             for i, it in enumerate(items, 1)
         )
-        + think_suffix()
+        + no_think_suffix
     )
     resp = client.chat.completions.create(
         model=config.CHAT_MODEL,
@@ -81,7 +83,7 @@ def write_digest(items: list[Article]) -> str:
             {"role": "system", "content": DIGEST_PROMPT},
             {"role": "user", "content": payload},
         ],
-        extra_body=think_extra_body(),
+        extra_body=no_think_body,
     )
     choice = resp.choices[0]
     # Truncation mid-reasoning is exactly how the chain-of-thought leaked into a

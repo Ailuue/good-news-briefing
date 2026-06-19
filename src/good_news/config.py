@@ -60,6 +60,9 @@ EMBED_MODEL = (
 # tokens -- much faster, which is what you want for high-volume classification.
 # Set True only if you ever want it to deliberate (slower).
 THINKING = False
+# Thinking is always disabled for the digest: it's creative writing, not analysis,
+# so reasoning tokens waste budget without improving output.
+DIGEST_THINKING = False
 
 # Upper bound on the digest completion. Without an explicit cap LM Studio applies
 # its own default limit, which truncates the briefing mid-sentence once enough
