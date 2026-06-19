@@ -77,8 +77,8 @@ BASE_URL = f"http://{PC_HOST}:1234/v1"
 # high-quality. Use the IQ4_XS quant (~18GB) so it stays fully on the card and
 # leaves room for context + the embedding model. Copy the EXACT ids from the
 # LM Studio server panel after loading each model.
-CHAT_MODEL = "qwen3.6-35b-a3b"  # load the IQ4_XS (or MTP) GGUF in LM Studio
-EMBED_MODEL = "qwen3-embedding-0.6b"  # tiny; co-loads with the chat model fine
+CHAT_MODEL = "unsloth/qwen3.6-35b-a3b"  # load the IQ4_XS (or MTP) GGUF in LM Studio
+EMBED_MODEL = "text-embedding-qwen3-embedding-0.6b"  # tiny; co-loads with the chat model fine
 
 # Qwen3 reasoning toggle. False appends "/no_think" so the model skips reasoning
 # tokens -- much faster, which is what you want for high-volume classification.
