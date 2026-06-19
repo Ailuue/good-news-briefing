@@ -41,7 +41,13 @@ def answer_text(msg: Any) -> str:
     raw thinking, which must never be surfaced to the reader. Blank content here
     means the model was still reasoning when it stopped, so there is no answer.
     """
-    return _THINK_RE.sub("", msg.content or "").strip()
+    content = _THINK_RE.sub("", msg.content or "").strip()
+    # If the token cap fired mid-reasoning, content starts with an unclosed
+    # <think> tag (the regex above requires a closing tag to match). Return ""
+    # so the caller sees "emitted only reasoning" rather than a confusing error.
+    if content.startswith("<think>"):
+        return ""
+    return content
 
 
 # Each item is tagged with an @@N@@ marker the model echoes onto the link line;

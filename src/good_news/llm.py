@@ -104,7 +104,14 @@ def write_digest(items: list[Article]) -> str:
                 file=sys.stderr,
             )
         else:
+            hint = (
+                " (token cap hit mid-reasoning — try setting DIGEST_THINKING = True"
+                " so reasoning tokens count against max_tokens properly, or raise"
+                " DIGEST_MAX_TOKENS further)"
+                if "<think>" in text
+                else ""
+            )
             raise RuntimeError(
-                f"digest hit the {config.DIGEST_MAX_TOKENS}-token cap with no complete items"
+                f"digest hit the {config.DIGEST_MAX_TOKENS}-token cap with no complete items{hint}"
             )
     return restore_links(text, items)
