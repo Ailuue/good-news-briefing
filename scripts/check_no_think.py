@@ -1,4 +1,11 @@
-"""Throwaway script: verify /no_think actually suppresses reasoning tokens."""
+"""Verify that /no_think + enable_thinking:false suppresses reasoning tokens.
+
+Run this after loading a new model in LM Studio to confirm that thinking is
+actually disabled before running the full pipeline. Exits 0 if suppressed,
+1 if reasoning tokens are still being generated.
+
+Requires LM Studio running and PC_HOST set in .env or the environment.
+"""
 import sys
 import os
 import pathlib
