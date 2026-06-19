@@ -125,6 +125,17 @@ def run(
     for a in kept:
         by_cat.setdefault(a.category or "other", []).append(a)
 
+    all_cats = [
+        "politics_social", "anti_corporate", "technology",
+        "community_helping", "science_health", "environment", "other",
+    ]
+    cat_counts = {c: len(by_cat.get(c, [])) for c in all_cats}
+    print(
+        "  category breakdown: "
+        + "  ".join(f"{c}={n}" for c, n in cat_counts.items()),
+        file=sys.stderr,
+    )
+
     selected: list[Article] = []
     for cat, group in by_cat.items():
         group = dedupe(group, min_keep=config.MIN_PER_CATEGORY)
