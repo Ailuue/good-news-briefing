@@ -105,6 +105,39 @@ Run it with `python3 good_news_briefing.py ...` from a source checkout, or
 `pip install -e .` and then use `python3 -m good_news ...` (or the `good-news`
 console script).
 
+## Testing & evals
+
+**Unit tests** (fast, no model required):
+
+```bash
+pip install -e ".[test]"
+pytest
+```
+
+Tests mock the LLM at its boundary and run in under a second. See
+`tests/README.md` for details.
+
+**Classifier eval** (requires LM Studio running):
+
+```bash
+python evals/run_eval.py             # summary — failures only
+python evals/run_eval.py --verbose   # show all 25 cases including passes
+```
+
+Runs `classify()` against 25 hand-labeled articles and reports per-field
+accuracy. Use this after editing `CRITERIA` to check for regressions. Exit
+code is non-zero if any case fails.
+
+## Scripts
+
+`scripts/check_no_think.py` — verifies that `/no_think` and `enable_thinking:false`
+actually suppress reasoning tokens on your model build before you run the
+full pipeline. Useful when setting up a new model or after an LM Studio update:
+
+```bash
+python scripts/check_no_think.py
+```
+
 ## Output
 
 - `~/good-news/briefing-YYYY-MM-DD.md` — the briefing for each real run.

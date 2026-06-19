@@ -34,6 +34,7 @@ See `test_llm.py` — that's the template for testing any new model call.
 | `test_guardrails.py` | Stripping leaked `<think>` reasoning, splicing real links over `@@N@@` markers (regression tests for past bugs) |
 | `test_models.py` | `Verdict.from_json` tolerating messy/partial model JSON |
 | `test_pipeline.py` | `keep()` editorial filter, `cosine()`, `dedupe()` |
+| `test_pipeline_run.py` | `run()` orchestration — filter applied, seen-history respected, briefing written and emailed |
 | `test_sources.py` | Reddit URL extraction, HTML→text, crawl with network mocked |
 | `test_store.py` | The SQLite seen-store (uses a temp DB) |
 | `test_llm.py` | `classify()` / `write_digest()` with the model faked |
