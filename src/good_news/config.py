@@ -74,17 +74,19 @@ DIGEST_MAX_TOKENS = 16000
 # PIPELINE THRESHOLDS
 # ----------------------------------------------------------------------
 MAX_PER_CATEGORY = 5
-MIN_PER_CATEGORY = 3              # relax dedupe if a category would have fewer than this
+MIN_PER_CATEGORY = 3  # relax dedupe if a category would have fewer than this
 OPTIMISM_THRESHOLD = 0.55  # 0..1; raise to be pickier
-DEDUPE_SIMILARITY = 0.86          # cosine above this = treat as the same story
-DEDUPE_SIMILARITY_RELAXED = 0.92  # fallback threshold used when a category is below MIN_PER_CATEGORY
+DEDUPE_SIMILARITY = 0.86  # cosine above this = treat as the same story
+DEDUPE_SIMILARITY_RELAXED = (
+    0.92  # fallback threshold used when a category is below MIN_PER_CATEGORY
+)
 MAX_ENTRIES_PER_FEED = 80
 # Reddit's RSS links to the comments page, and its "summary" is just the
 # submission blurb. When True, swap in the real article URL and crawl the
 # article body so the model judges the story, not the reddit post. Adds a
 # network fetch per reddit item; failures fall back to the RSS summary.
 FETCH_REDDIT_ARTICLES = True
-ARTICLE_FETCH_TIMEOUT = 15  # seconds per article crawl
+ARTICLE_FETCH_TIMEOUT = 10  # seconds per article crawl
 ARTICLE_MAX_CHARS = 4000  # trim crawled body before sending to the model
 
 # ----------------------------------------------------------------------
