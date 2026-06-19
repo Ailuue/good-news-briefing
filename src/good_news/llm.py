@@ -6,6 +6,7 @@ pointed at the LAN host. The model is local, so the api_key can be anything.
 
 from __future__ import annotations
 import json
+import re
 import sys
 from typing import Any, cast
 from openai import OpenAI
@@ -86,17 +87,24 @@ def write_digest(items: list[Article]) -> str:
         extra_body=no_think_body,
     )
     choice = resp.choices[0]
-    # Truncation mid-reasoning is exactly how the chain-of-thought leaked into a
-    # briefing before. Fail loudly instead of returning a half-baked digest.
-    if choice.finish_reason == "length":
-        raise RuntimeError(
-            f"digest hit the {config.DIGEST_MAX_TOKENS}-token cap before finishing; "
-            "raise DIGEST_MAX_TOKENS or disable the model's thinking."
-        )
     text = answer_text(choice.message)
     if not text:
         raise RuntimeError(
             "model returned no digest text (it likely emitted only reasoning); "
             "disable thinking for the digest call."
         )
+    if choice.finish_reason == "length":
+        # Trim to the last complete @@N@@ marker so we don't return a half-written item.
+        last = list(re.finditer(r"@@\d+@@", text))
+        if last:
+            text = text[: last[-1].end()]
+            print(
+                f"  ! digest hit the {config.DIGEST_MAX_TOKENS}-token cap; "
+                f"returning {len(last)} of {len(items)} items",
+                file=sys.stderr,
+            )
+        else:
+            raise RuntimeError(
+                f"digest hit the {config.DIGEST_MAX_TOKENS}-token cap with no complete items"
+            )
     return restore_links(text, items)
