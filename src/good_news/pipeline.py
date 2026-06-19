@@ -31,8 +31,13 @@ def cosine(a, b) -> float:
     return dot / (na * nb) if na and nb else 0.0
 
 
-def dedupe(items: list[Article]) -> list[Article]:
-    """Collapse near-identical coverage, keeping the highest-optimism version."""
+def dedupe(items: list[Article], min_keep: int = 1) -> list[Article]:
+    """Collapse near-identical coverage, keeping the highest-optimism version.
+
+    If the strict threshold would leave fewer than min_keep items, retries with
+    DEDUPE_SIMILARITY_RELAXED so sparse categories aren't over-collapsed.
+    Embeddings are computed once and reused across both passes.
+    """
     if len(items) < 2:
         return items
     try:
@@ -40,13 +45,20 @@ def dedupe(items: list[Article]) -> list[Article]:
     except Exception as e:
         print(f"  ! embeddings unavailable, skipping dedupe: {e}", file=sys.stderr)
         return items
-    kept: list[Article] = []
-    kept_vecs: list[list[float]] = []
-    for it, v in sorted(zip(items, vecs), key=lambda p: -(p[0].optimism or 0)):
-        if all(cosine(v, kv) < config.DEDUPE_SIMILARITY for kv in kept_vecs):
-            kept.append(it)
-            kept_vecs.append(v)
-    return kept
+
+    def _run(threshold: float) -> list[Article]:
+        kept: list[Article] = []
+        kept_vecs: list[list[float]] = []
+        for it, v in sorted(zip(items, vecs), key=lambda p: -(p[0].optimism or 0)):
+            if all(cosine(v, kv) < threshold for kv in kept_vecs):
+                kept.append(it)
+                kept_vecs.append(v)
+        return kept
+
+    result = _run(config.DEDUPE_SIMILARITY)
+    if len(result) < min_keep:
+        result = _run(config.DEDUPE_SIMILARITY_RELAXED)
+    return result
 
 
 def _print_verdict(article: Article, v: Verdict, passed: bool) -> None:
@@ -115,7 +127,7 @@ def run(
 
     selected: list[Article] = []
     for cat, group in by_cat.items():
-        group = dedupe(group)
+        group = dedupe(group, min_keep=config.MIN_PER_CATEGORY)
         group.sort(key=lambda x: -(x.optimism or 0))
         selected.extend(group[:config.MAX_PER_CATEGORY])
 

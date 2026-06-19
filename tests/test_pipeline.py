@@ -102,3 +102,40 @@ def test_dedupe_skips_when_embeddings_fail(monkeypatch):
 def test_dedupe_noop_for_single_item():
     items = [_art("solo", 0.5)]
     assert pipeline.dedupe(items) == items
+
+
+def test_dedupe_relaxes_threshold_when_below_min_keep(monkeypatch):
+    # near-dup-high and near-dup-low have cosine similarity of 0.89 -- between
+    # the strict threshold (0.86) and the relaxed one (0.92).
+    # Strict pass: 0.89 > 0.86 → they collapse → 2 items survive.
+    # min_keep=3: 2 < 3 → retry with relaxed pass.
+    # Relaxed pass: 0.89 < 0.92 → they are NOT duplicates → 3 items survive.
+    import math
+    sim = 0.89
+    vecs = {
+        "near-dup-high": [1.0, 0.0],
+        "near-dup-low":  [sim, math.sqrt(1 - sim ** 2)],  # cosine([1,0], this) == 0.89
+        "other":         [0.0, 1.0],
+    }
+    items = [_art("near-dup-high", 0.9), _art("near-dup-low", 0.6), _art("other", 0.7)]
+    monkeypatch.setattr(pipeline, "embed", lambda titles: [vecs[t] for t in titles])
+
+    kept = pipeline.dedupe(items, min_keep=3)
+    assert {a.title for a in kept} == {"near-dup-high", "near-dup-low", "other"}
+
+
+def test_dedupe_stays_strict_when_min_keep_is_met(monkeypatch):
+    # Same vectors as above, but min_keep=2. Strict pass gives 2 items (≥ 2),
+    # so the relaxed threshold must NOT be used and the lower-optimism dup is dropped.
+    import math
+    sim = 0.89
+    vecs = {
+        "near-dup-high": [1.0, 0.0],
+        "near-dup-low":  [sim, math.sqrt(1 - sim ** 2)],
+        "other":         [0.0, 1.0],
+    }
+    items = [_art("near-dup-high", 0.9), _art("near-dup-low", 0.6), _art("other", 0.7)]
+    monkeypatch.setattr(pipeline, "embed", lambda titles: [vecs[t] for t in titles])
+
+    kept = pipeline.dedupe(items, min_keep=2)
+    assert {a.title for a in kept} == {"near-dup-high", "other"}
