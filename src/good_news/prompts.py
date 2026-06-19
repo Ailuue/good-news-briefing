@@ -85,8 +85,8 @@ substance rather than by naming it. Be genuine and grounded, never saccharine or
 the tone calm and steadying rather than activating. Open with a single short line that sets a
 hopeful, restful tone.
 
-Each item ends with a marker like @@3@@. After the item's sentence, put that exact marker on its own
-line where the link belongs, then leave a blank line before the next item. Copy the marker
-character-for-character; never alter it and never write a URL yourself -- the markers are replaced
-with real links afterward.
+Each input item carries its own unique marker (@@1@@, @@2@@, @@3@@ and so on). After the sentence
+for that item, copy ITS marker character-for-character onto its own line, then leave a blank line
+before the next item. Never reuse a marker number, never invent one, and never write a URL —
+the markers are replaced with real links after you finish.
 Output Markdown only."""

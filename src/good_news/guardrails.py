@@ -62,6 +62,16 @@ def restore_links(text: str, items: list[Article]) -> str:
     # a URL here means the model wrote one despite being told to copy markers.
     if "http" in text:
         print("  ! digest contains a model-written URL (markers expected)", file=sys.stderr)
+    # Catch the model reusing the same marker number for every item, which would
+    # make all links resolve to the same article.
+    found = sorted(int(m) for m in _LINK_MARK_RE.findall(text))
+    expected = list(range(1, len(items) + 1))
+    if found != expected:
+        print(
+            f"  ! marker mismatch: expected @@1@@–@@{len(items)}@@ each once, "
+            f"got {found}",
+            file=sys.stderr,
+        )
     restored = _LINK_MARK_RE.sub(sub, text)
     # Markers the model dropped or mangled instead of echoing them verbatim.
     if leftover := _LINK_MARK_RE.findall(restored):

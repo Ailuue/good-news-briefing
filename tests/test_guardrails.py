@@ -77,6 +77,19 @@ def test_restore_links_warns_on_unresolved_marker(capsys):
     assert "unresolved link marker" in capsys.readouterr().err
 
 
+def test_restore_links_warns_on_duplicate_markers(capsys):
+    # Regression: model repeated @@1@@ for every item, making all links point
+    # to the same article. The mismatch check must catch this.
+    restore_links("First @@1@@\n\nSecond @@1@@", _items())
+    assert "marker mismatch" in capsys.readouterr().err
+
+
+def test_restore_links_warns_on_missing_marker(capsys):
+    # Model dropped @@2@@ entirely — one item gets no link.
+    restore_links("Only @@1@@ here", _items())
+    assert "marker mismatch" in capsys.readouterr().err
+
+
 def test_restore_links_separates_items_with_blank_line():
     # Regression: without a blank line between items a category collapses into
     # one run-on markdown paragraph. Each link on its own line gets one after it.
