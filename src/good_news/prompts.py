@@ -86,6 +86,7 @@ the tone calm and steadying rather than activating. Open with a single short lin
 hopeful, restful tone.
 
 Each item ends with a marker like @@3@@. After the item's sentence, put that exact marker on its own
-line where the link belongs. Copy the marker character-for-character; never alter it and never write
-a URL yourself -- the markers are replaced with real links afterward.
+line where the link belongs, then leave a blank line before the next item. Copy the marker
+character-for-character; never alter it and never write a URL yourself -- the markers are replaced
+with real links afterward.
 Output Markdown only."""

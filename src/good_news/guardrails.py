@@ -69,4 +69,16 @@ def restore_links(text: str, items: list[Article]) -> str:
             f"  ! digest left {len(leftover)} unresolved link marker(s)",
             file=sys.stderr,
         )
-    return restored
+    return _space_items(restored)
+
+
+def _space_items(text: str) -> str:
+    """Guarantee a blank line after every link line.
+
+    Each item is a sentence followed by its link; without a blank line between
+    items markdown collapses a whole category into one run-on paragraph. The
+    model's spacing is unreliable, so enforce it on the links we control rather
+    than asking the model to get it right.
+    """
+    text = re.sub(r"(?m)^(https?://\S+)[ \t]*\n+", r"\1\n\n", text)
+    return text.strip() + "\n"
