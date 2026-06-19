@@ -1,0 +1,115 @@
+"""Configuration knobs and environment loading.
+
+Importing this module also performs the two bits of environment setup the rest
+of the package depends on: pointing urllib at certifi's CA bundle (so HTTPS
+feeds don't silently fail) and loading the .env file. Both run once, at import.
+"""
+
+from __future__ import annotations
+import os
+import sys
+import pathlib
+
+# macOS Python often ships without root certificates, so feedparser's urllib
+# fails every HTTPS feed with CERTIFICATE_VERIFY_FAILED and silently returns
+# zero entries. Point urllib at certifi's CA bundle before any feed is parsed.
+try:
+    import certifi
+
+    os.environ.setdefault("SSL_CERT_FILE", certifi.where())
+except ImportError:
+    print(
+        "  ! certifi not installed; HTTPS feeds may fail (pip install certifi)",
+        file=sys.stderr,
+    )
+
+# Load private/local settings from a .env file at the project root (gitignored).
+# Real environment variables take precedence, so nothing here is required.
+try:
+    from dotenv import load_dotenv
+
+    # src/good_news/config.py -> parents[2] is the repo root, where .env lives.
+    load_dotenv(pathlib.Path(__file__).resolve().parents[2] / ".env")
+except ImportError:
+    print(
+        "  ! python-dotenv not installed; relying on real env vars (pip install python-dotenv)",
+        file=sys.stderr,
+    )
+
+
+def _env_list(name: str, default: str = "") -> list[str]:
+    """Read a comma-separated env var into a clean list of strings."""
+    return [x.strip() for x in os.environ.get(name, default).split(",") if x.strip()]
+
+
+# ----------------------------------------------------------------------
+# MODEL / SERVER
+# ----------------------------------------------------------------------
+PC_HOST = os.environ.get("PC_HOST", "127.0.0.1")  # set in .env to your PC's LAN IP
+BASE_URL = f"http://{PC_HOST}:1234/v1"
+# Tuned for an RTX 3090 (24GB). Qwen3.6-35B-A3B is a 3B-active MoE: fast and
+# high-quality. Use the IQ4_XS quant (~18GB) so it stays fully on the card and
+# leaves room for context + the embedding model. Copy the EXACT ids from the
+# LM Studio server panel after loading each model.
+CHAT_MODEL = "unsloth/qwen3.6-35b-a3b"  # load the IQ4_XS (or MTP) GGUF in LM Studio
+EMBED_MODEL = "text-embedding-qwen3-embedding-0.6b"  # tiny; co-loads with the chat model fine
+
+# Qwen3 reasoning toggle. False appends "/no_think" so the model skips reasoning
+# tokens -- much faster, which is what you want for high-volume classification.
+# Set True only if you ever want it to deliberate (slower).
+THINKING = False
+
+# ----------------------------------------------------------------------
+# PIPELINE THRESHOLDS
+# ----------------------------------------------------------------------
+MAX_PER_CATEGORY = 5
+OPTIMISM_THRESHOLD = 0.55  # 0..1; raise to be pickier
+DEDUPE_SIMILARITY = 0.86  # cosine above this = treat as the same story
+MAX_ENTRIES_PER_FEED = 35
+# Reddit's RSS links to the comments page, and its "summary" is just the
+# submission blurb. When True, swap in the real article URL and crawl the
+# article body so the model judges the story, not the reddit post. Adds a
+# network fetch per reddit item; failures fall back to the RSS summary.
+FETCH_REDDIT_ARTICLES = True
+ARTICLE_FETCH_TIMEOUT = 15  # seconds per article crawl
+ARTICLE_MAX_CHARS = 4000  # trim crawled body before sending to the model
+
+# ----------------------------------------------------------------------
+# OUTPUT
+# ----------------------------------------------------------------------
+OUT_DIR = pathlib.Path.home() / "good-news"
+DB_PATH = OUT_DIR / "seen.sqlite3"
+OPEN_WHEN_DONE = True  # `open` the file on macOS when finished
+
+# ---- Email (optional) -----------------------------------------------------
+# After a real run, mail the briefing to EMAIL_TO. Leave EMAIL_TO empty to
+# disable. Auth uses a Gmail APP PASSWORD (not your normal password), read from
+# the GMAIL_APP_PASSWORD env var so no secret lives in this file:
+#   1. Turn on 2-Step Verification for the Gmail account.
+#   2. Visit https://myaccount.google.com/apppasswords, create one, copy 16 chars.
+#   3. Add to ~/.zshrc:  export GMAIL_APP_PASSWORD="xxxxxxxxxxxxxxxx"
+EMAIL_FROM = os.environ.get("EMAIL_FROM", "")  # set in .env
+EMAIL_TO = _env_list("EMAIL_TO")  # set in .env, comma-separated
+SMTP_HOST = os.environ.get("SMTP_HOST", "smtp.gmail.com")
+SMTP_PORT = int(os.environ.get("SMTP_PORT", "465"))  # SSL
+
+# ----------------------------------------------------------------------
+# FEEDS  --  verify each of these resolves in a browser; RSS paths drift.
+# ----------------------------------------------------------------------
+FEEDS = [
+    # progressive / social-progress
+    "https://www.theguardian.com/inequality/rss",
+    "https://www.propublica.org/feeds/propublica/main",
+    "https://theintercept.com/feed/?lang=en",
+    "https://www.motherjones.com/feed/",
+    "https://www.commondreams.org/rss.xml",
+    # anti-corporate / tech
+    "https://www.404media.co/rss/",
+    "https://www.eff.org/rss/updates.xml",
+    # solutions / good news
+    "https://reasonstobecheerful.world/feed/",
+    "https://www.positive.news/feed/",
+    "https://www.yesmagazine.org/feed",
+    # community / humans helping humans
+    "https://www.reddit.com/r/UpliftingNews/.rss",
+]
