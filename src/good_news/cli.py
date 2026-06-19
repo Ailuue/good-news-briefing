@@ -18,7 +18,7 @@ def main(argv: list[str] | None = None) -> None:
         "--limit",
         type=int,
         default=None,
-        help="entries to pull per feed (default: 5 in --dry-run, else 80)",
+        help="entries to pull per feed (default: 5 in --dry-run, else 25)",
     )
     p.add_argument(
         "--verdicts",

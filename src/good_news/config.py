@@ -68,7 +68,7 @@ DIGEST_THINKING = False
 # its own default limit, which truncates the briefing mid-sentence once enough
 # items pass the filter. Sized to comfortably fit a full multi-category digest
 # with up to 25 items (thinking is disabled, so all tokens go to output).
-DIGEST_MAX_TOKENS = 16000
+DIGEST_MAX_TOKENS = 50000
 
 # ----------------------------------------------------------------------
 # PIPELINE THRESHOLDS
@@ -80,7 +80,7 @@ DEDUPE_SIMILARITY = 0.86  # cosine above this = treat as the same story
 DEDUPE_SIMILARITY_RELAXED = (
     0.92  # fallback threshold used when a category is below MIN_PER_CATEGORY
 )
-MAX_ENTRIES_PER_FEED = 80
+MAX_ENTRIES_PER_FEED = 25
 # Reddit's RSS links to the comments page, and its "summary" is just the
 # submission blurb. When True, swap in the real article URL and crawl the
 # article body so the model judges the story, not the reddit post. Adds a
@@ -121,6 +121,8 @@ FEEDS = [
     # anti-corporate / tech
     "https://www.404media.co/rss/",
     "https://www.eff.org/rss/updates.xml",
+    "https://www.wired.com/feed/rss",
+    "https://feeds.arstechnica.com/arstechnica/index",
     # solutions / good news
     "https://reasonstobecheerful.world/feed/",
     "https://www.positive.news/feed/",
@@ -129,5 +131,5 @@ FEEDS = [
     "https://www.reddit.com/r/UpliftingNews/.rss",
     # major outlets — good/uplifting filtered sections
     "https://feeds.bbci.co.uk/news/topics/cx2pk70323et/rss.xml",  # BBC Uplifting Stories
-    "https://www.theguardian.com/world/series/the-upside/rss",    # Guardian: The Upside (verify in browser)
+    "https://www.theguardian.com/world/series/the-upside/rss",  # Guardian: The Upside (verify in browser)
 ]
