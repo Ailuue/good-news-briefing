@@ -143,15 +143,18 @@ reference `optimism` score (0.0–1.0) assigned by an agent reading it against
 optimistic or pessimistic. Exit code is non-zero if any case falls outside the
 tolerance.
 
-See [`LEARNINGS.md`](LEARNINGS.md) for a write-up of what this eval surfaced —
-e.g. the model silently compressing the optimism scale onto a single value until
-the prompt gave it calibration anchors.
+See [`LEARNINGS.md`](LEARNINGS.md) for a write-up of what this eval surfaced.
 
 ## Engineering learnings
 
 [`LEARNINGS.md`](LEARNINGS.md) is a running log of the non-obvious lessons this
 project has taught me — measured findings about model behavior, evaluation, and
-prompt design, each with the change I made and what the numbers did.
+prompt design, each with the change I made and what the numbers did. For example:
+the model paraphrases URLs into plausible-but-dead links, so it never sees one —
+each item carries an opaque `@@N@@` marker it echoes, and real links are spliced
+back in by code after generation; or, further down the log, the model silently
+compressing the optimism scale onto a single value until the prompt gave it
+calibration anchors.
 
 ## Scripts
 
