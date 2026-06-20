@@ -143,6 +143,16 @@ reference `optimism` score (0.0–1.0) assigned by an agent reading it against
 optimistic or pessimistic. Exit code is non-zero if any case falls outside the
 tolerance.
 
+See [`LEARNINGS.md`](LEARNINGS.md) for a write-up of what this eval surfaced —
+e.g. the model silently compressing the optimism scale onto a single value until
+the prompt gave it calibration anchors.
+
+## Engineering learnings
+
+[`LEARNINGS.md`](LEARNINGS.md) is a running log of the non-obvious lessons this
+project has taught me — measured findings about model behavior, evaluation, and
+prompt design, each with the change I made and what the numbers did.
+
 ## Scripts
 
 `scripts/check_no_think.py` — verifies that `/no_think` and `enable_thinking:false`
