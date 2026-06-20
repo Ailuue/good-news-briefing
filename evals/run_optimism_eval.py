@@ -68,7 +68,7 @@ def run() -> list[Result]:
     print(f"(pass = model optimism within ±{TOLERANCE:g} of the reference score)\n")
 
     for i, fx in enumerate(fixtures, 1):
-        print(f"  [{i:2d}/{total}] {fx['id']:<24}", end="", flush=True)
+        print(f"  [{i:2d}/{total}] {fx['id']:<30}", end="", flush=True)
         article = Article(**fx["article"])
         verdict = classify(article)
         r = Result(fx["id"], fx.get("description", ""), float(fx["optimism"]), verdict)

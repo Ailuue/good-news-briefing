@@ -1,5 +1,18 @@
 [
   {
+    "id": "opt_river_cleanup",
+    "description": "volunteers remove trash from a river over one weekend",
+    "article": {
+      "title": "Volunteers pull two tons of trash from city river in weekend cleanup",
+      "summary": "Around 200 volunteers spent a Saturday removing roughly two tons of litter and debris from a stretch of urban river, an annual cleanup organizers hope will raise awareness of stormwater pollution. No ongoing program was announced.",
+      "source": "Local Gazette",
+      "link": "https://example.com/eval/opt_river_cleanup",
+      "is_reddit_article": false
+    },
+    "optimism": 0.5,
+    "notes": "Genuine community effort, but a one-off with limited lasting impact and a partly symbolic, awareness-raising character. Squarely middling."
+  },
+  {
     "id": "opt_malaria_rollout",
     "description": "proven malaria vaccine begins mass rollout across four countries",
     "article": {
@@ -13,30 +26,17 @@
     "notes": "Top of the scale: proven intervention, already deployed at massive scale, directly saving children's lives with measured mortality drops. Substantive and broad."
   },
   {
-    "id": "opt_guinea_worm",
-    "description": "decades-long eradication campaign nears elimination of a disease",
+    "id": "opt_kindness_proclamation",
+    "description": "mayor proclaims a symbolic 'week of kindness' with no funding",
     "article": {
-      "title": "Guinea worm disease falls to just 11 human cases worldwide",
-      "summary": "A 40-year global eradication campaign built on community health volunteers and clean-water education has driven Guinea worm disease from 3.5 million annual cases in the 1980s to just 11 confirmed human cases this year, putting it on track to become the second human disease ever eradicated.",
-      "source": "World Health Organization",
-      "link": "https://example.com/eval/opt_guinea_worm",
+      "title": "Mayor proclaims 'Week of Kindness' encouraging residents to volunteer",
+      "summary": "The city's mayor signed a proclamation declaring the third week of October a 'Week of Kindness,' encouraging residents to volunteer, check on neighbors, and perform small acts of generosity. The proclamation carries no funding and sets no specific goals.",
+      "source": "Local Gazette",
+      "link": "https://example.com/eval/opt_kindness_proclamation",
       "is_reddit_article": false
     },
-    "optimism": 0.9,
-    "notes": "Near-eradication of a disease through sustained human effort. Historic and substantive; a hair below malaria only because it affects far fewer people now."
-  },
-  {
-    "id": "opt_clean_water_well",
-    "description": "NGO and villagers build wells bringing clean water to a region",
-    "article": {
-      "title": "New wells bring clean water to 5,000 people, halving child illness",
-      "summary": "A partnership between a water charity and residents of a rural Malawian district completed 14 boreholes this year, giving 5,000 people their first reliable access to clean drinking water. Local clinics report cases of waterborne illness in children have already fallen by roughly half.",
-      "source": "Positive News",
-      "link": "https://example.com/eval/opt_clean_water_well",
-      "is_reddit_article": false
-    },
-    "optimism": 0.85,
-    "notes": "Concrete, measurable, life-improving change for a whole community, driven by people working together. High but not top because the scale is regional, not global."
+    "optimism": 0.3,
+    "notes": "Pleasant intent but purely symbolic: no funding, no targets, no help actually delivered. Sits low because nothing concrete changes."
   },
   {
     "id": "opt_nurses_contract",
@@ -52,82 +52,43 @@
     "notes": "A hard-won, concrete victory for thousands of workers with binding protections and potential ripple effects. Substantive collective good."
   },
   {
-    "id": "opt_stranger_kidney",
-    "description": "stranger donates a kidney to a child they had never met",
+    "id": "opt_orchard",
+    "description": "volunteers plant a community orchard in a food desert",
     "article": {
-      "title": "Stranger donates kidney to 9-year-old after seeing mother's plea",
-      "summary": "A 34-year-old warehouse worker came forward as a living kidney donor for a 9-year-old girl he had never met after seeing her mother's appeal shared in a local group, undergoing surgery last month. The girl is now off dialysis and recovering well.",
-      "source": "Good News Network",
-      "link": "https://example.com/eval/opt_stranger_kidney",
-      "is_reddit_article": false
-    },
-    "optimism": 0.75,
-    "notes": "Profound human-helping-human act that saved a life, but the direct impact is one child and one family. Deeply uplifting; high on the human-kindness axis, moderate on breadth."
-  },
-  {
-    "id": "opt_solar_school",
-    "description": "rural school gains solar power, enabling evening study",
-    "article": {
-      "title": "Solar panels let rural school stay open after dark for 300 students",
-      "summary": "A donor-funded solar installation has brought electricity to a remote school for the first time, allowing 300 students to study and use computers in the evenings. Teachers say attendance in optional evening sessions has been strong since the panels went live.",
+      "title": "Volunteers plant 200-tree community orchard in a food desert",
+      "summary": "Around 120 volunteers planted a 200-tree community orchard on a donated lot in a neighborhood with no nearby grocery store. Organizers say the trees should begin producing free fruit for residents in three to four years.",
       "source": "Reasons to be Cheerful",
-      "link": "https://example.com/eval/opt_solar_school",
+      "link": "https://example.com/eval/opt_orchard",
       "is_reddit_article": false
     },
-    "optimism": 0.65,
-    "notes": "Real, tangible improvement for a few hundred students, with early signs of uptake. Genuinely good but modest in scale and impact depth."
+    "optimism": 0.55,
+    "notes": "Concrete and community-driven with real future value, but the payoff is years away and the scale is modest. Mid."
   },
   {
-    "id": "opt_food_bank_expand",
-    "description": "community food bank opens a second site",
+    "id": "opt_library_petition",
+    "description": "residents launch a petition to save a library, no outcome yet",
     "article": {
-      "title": "Community food bank opens second location to reach 150 more families",
-      "summary": "A volunteer-run food bank opened a second distribution site this month after two years of fundraising, expanding its reach to an estimated 150 additional families in a neighboring town. Organizers say demand has grown steadily through the year.",
-      "source": "Block Club Chicago",
-      "link": "https://example.com/eval/opt_food_bank_expand",
-      "is_reddit_article": false
-    },
-    "optimism": 0.6,
-    "notes": "Solid, concrete community-helping outcome, but modest in scale and partly a response to rising need. Comfortably mid-range."
-  },
-  {
-    "id": "opt_river_cleanup",
-    "description": "volunteers remove trash from a river over one weekend",
-    "article": {
-      "title": "Volunteers pull two tons of trash from city river in weekend cleanup",
-      "summary": "Around 200 volunteers spent a Saturday removing roughly two tons of litter and debris from a stretch of urban river, an annual cleanup organizers hope will raise awareness of stormwater pollution. No ongoing program was announced.",
+      "title": "Residents launch petition to save branch library from closure",
+      "summary": "A group of residents has started an online petition urging the city not to close a neighborhood branch library facing budget cuts, gathering several thousand signatures so far. The city council has not yet scheduled a vote on the closure.",
       "source": "Local Gazette",
-      "link": "https://example.com/eval/opt_river_cleanup",
+      "link": "https://example.com/eval/opt_library_petition",
       "is_reddit_article": false
     },
-    "optimism": 0.5,
-    "notes": "Genuine community effort, but a one-off with limited lasting impact and a partly symbolic, awareness-raising character. Squarely middling."
+    "optimism": 0.2,
+    "notes": "A hopeful organizing effort, but no good outcome has been reached or is assured; it is a reaction to a threatened loss. Near the bottom of the meaningful range."
   },
   {
-    "id": "opt_ubi_pilot",
-    "description": "small guaranteed-income pilot shows early, unproven promise",
+    "id": "opt_free_meals",
+    "description": "school district makes meals free for all students",
     "article": {
-      "title": "Small guaranteed-income pilot reports early gains for 25 families",
-      "summary": "A pilot program giving 25 low-income families $500 a month reported that, after six months, recipients were more likely to be in stable housing and full-time work, though researchers cautioned the sample is tiny and the study is not yet complete.",
-      "source": "Vox",
-      "link": "https://example.com/eval/opt_ubi_pilot",
+      "title": "School district makes meals free for all 60,000 students",
+      "summary": "A large urban school district voted to provide free breakfast and lunch to all 60,000 of its students regardless of income, removing means-testing that advocates said stigmatized children and left some hungry. The program starts next term.",
+      "source": "City Bureau",
+      "link": "https://example.com/eval/opt_free_meals",
       "is_reddit_article": false
     },
-    "optimism": 0.45,
-    "notes": "Promising direction and a real intervention, but tiny sample, early results, and explicit caveats keep this below the midpoint despite the hopeful framing."
-  },
-  {
-    "id": "opt_garden_grant",
-    "description": "city awards a grant to fund a future community garden",
-    "article": {
-      "title": "City awards $50,000 grant to build new community garden next year",
-      "summary": "The city announced a $50,000 grant to a neighborhood association to build a community garden on a vacant lot, with construction expected to begin next spring. Organizers say the garden will eventually include plots for about 40 households.",
-      "source": "Local Gazette",
-      "link": "https://example.com/eval/opt_garden_grant",
-      "is_reddit_article": false
-    },
-    "optimism": 0.35,
-    "notes": "Positive intent but only an announcement: no outcome yet, modest eventual scale, and dependent on future execution. Low-mid."
+    "optimism": 0.7,
+    "notes": "Broad, concrete, and materially improves daily life for tens of thousands of kids while removing stigma. High-mid, just shy of the top tier on scale."
   },
   {
     "id": "opt_volunteer_award",
@@ -143,16 +104,159 @@
     "notes": "Warm and pleasant but almost entirely symbolic, with no new help delivered and a tiny footprint. Recognizes past good rather than creating new good."
   },
   {
-    "id": "opt_library_petition",
-    "description": "residents launch a petition to save a library, no outcome yet",
+    "id": "opt_clean_water_well",
+    "description": "NGO and villagers build wells bringing clean water to a region",
     "article": {
-      "title": "Residents launch petition to save branch library from closure",
-      "summary": "A group of residents has started an online petition urging the city not to close a neighborhood branch library facing budget cuts, gathering several thousand signatures so far. The city council has not yet scheduled a vote on the closure.",
-      "source": "Local Gazette",
-      "link": "https://example.com/eval/opt_library_petition",
+      "title": "New wells bring clean water to 5,000 people, halving child illness",
+      "summary": "A partnership between a water charity and residents of a rural Malawian district completed 14 boreholes this year, giving 5,000 people their first reliable access to clean drinking water. Local clinics report cases of waterborne illness in children have already fallen by roughly half.",
+      "source": "Positive News",
+      "link": "https://example.com/eval/opt_clean_water_well",
       "is_reddit_article": false
     },
-    "optimism": 0.2,
-    "notes": "A hopeful organizing effort, but no good outcome has been reached or is assured; it is a reaction to a threatened loss. Near the bottom of the meaningful range."
+    "optimism": 0.85,
+    "notes": "Concrete, measurable, life-improving change for a whole community, driven by people working together. High but not top because the scale is regional, not global."
+  },
+  {
+    "id": "opt_microgrant_pilot",
+    "description": "nonprofit announces a small micro-grant pilot, grants not yet made",
+    "article": {
+      "title": "Nonprofit launches micro-grant pilot for 30 small businesses",
+      "summary": "A community nonprofit announced a pilot offering $2,000 micro-grants to 30 minority-owned small businesses, with the first grants to be awarded next month. Organizers hope to expand the program if it shows results.",
+      "source": "Block Club Chicago",
+      "link": "https://example.com/eval/opt_microgrant_pilot",
+      "is_reddit_article": false
+    },
+    "optimism": 0.4,
+    "notes": "Real and well-intentioned but small, still forward-looking ('to be awarded'), with uncertain expansion. Low-mid."
+  },
+  {
+    "id": "opt_stranger_kidney",
+    "description": "stranger donates a kidney to a child they had never met",
+    "article": {
+      "title": "Stranger donates kidney to 9-year-old after seeing mother's plea",
+      "summary": "A 34-year-old warehouse worker came forward as a living kidney donor for a 9-year-old girl he had never met after seeing her mother's appeal shared in a local group, undergoing surgery last month. The girl is now off dialysis and recovering well.",
+      "source": "Good News Network",
+      "link": "https://example.com/eval/opt_stranger_kidney",
+      "is_reddit_article": false
+    },
+    "optimism": 0.75,
+    "notes": "Profound human-helping-human act that saved a life, but the direct impact is one child and one family. Deeply uplifting; high on the human-kindness axis, moderate on breadth."
+  },
+  {
+    "id": "opt_sanctuary_expand",
+    "description": "community funds an animal sanctuary expansion",
+    "article": {
+      "title": "Community raises funds to expand animal sanctuary for 50 more rescues",
+      "summary": "Donations from hundreds of local supporters allowed a volunteer-run animal sanctuary to buy an adjoining field and build new shelters, expanding its capacity to take in about 50 more rescued farm animals.",
+      "source": "The Dodo",
+      "link": "https://example.com/eval/opt_sanctuary_expand",
+      "is_reddit_article": false
+    },
+    "optimism": 0.5,
+    "notes": "Warm community generosity with a concrete outcome, but narrow in beneficiaries and modest stakes. Middling."
+  },
+  {
+    "id": "opt_guinea_worm",
+    "description": "decades-long eradication campaign nears elimination of a disease",
+    "article": {
+      "title": "Guinea worm disease falls to just 11 human cases worldwide",
+      "summary": "A 40-year global eradication campaign built on community health volunteers and clean-water education has driven Guinea worm disease from 3.5 million annual cases in the 1980s to just 11 confirmed human cases this year, putting it on track to become the second human disease ever eradicated.",
+      "source": "World Health Organization",
+      "link": "https://example.com/eval/opt_guinea_worm",
+      "is_reddit_article": false
+    },
+    "optimism": 0.9,
+    "notes": "Near-eradication of a disease through sustained human effort. Historic and substantive; a hair below malaria only because it affects far fewer people now."
+  },
+  {
+    "id": "opt_garden_grant",
+    "description": "city awards a grant to fund a future community garden",
+    "article": {
+      "title": "City awards $50,000 grant to build new community garden next year",
+      "summary": "The city announced a $50,000 grant to a neighborhood association to build a community garden on a vacant lot, with construction expected to begin next spring. Organizers say the garden will eventually include plots for about 40 households.",
+      "source": "Local Gazette",
+      "link": "https://example.com/eval/opt_garden_grant",
+      "is_reddit_article": false
+    },
+    "optimism": 0.35,
+    "notes": "Positive intent but only an announcement: no outcome yet, modest eventual scale, and dependent on future execution. Low-mid."
+  },
+  {
+    "id": "opt_coffee_union",
+    "description": "workers at a single small coffee shop vote to unionize",
+    "article": {
+      "title": "Workers at neighborhood coffee shop vote to unionize",
+      "summary": "Baristas at an independent coffee shop voted 14-to-3 to form a union, citing scheduling instability and low pay, in what organizers called part of a growing wave of service-sector organizing.",
+      "source": "Labor Notes",
+      "link": "https://example.com/eval/opt_coffee_union",
+      "is_reddit_article": false
+    },
+    "optimism": 0.55,
+    "notes": "A genuine worker/accountability win the criteria favors, but confined to one small workplace. Real yet limited reach; mid."
+  },
+  {
+    "id": "opt_solar_school",
+    "description": "rural school gains solar power, enabling evening study",
+    "article": {
+      "title": "Solar panels let rural school stay open after dark for 300 students",
+      "summary": "A donor-funded solar installation has brought electricity to a remote school for the first time, allowing 300 students to study and use computers in the evenings. Teachers say attendance in optional evening sessions has been strong since the panels went live.",
+      "source": "Reasons to be Cheerful",
+      "link": "https://example.com/eval/opt_solar_school",
+      "is_reddit_article": false
+    },
+    "optimism": 0.65,
+    "notes": "Real, tangible improvement for a few hundred students, with early signs of uptake. Genuinely good but modest in scale and impact depth."
+  },
+  {
+    "id": "opt_school_counselor_pledge",
+    "description": "foundation pledges counselors but hiring hasn't started",
+    "article": {
+      "title": "Foundation pledges to fund mental-health counselors in 10 schools",
+      "summary": "A private foundation announced a pledge to fund full-time mental-health counselors in 10 under-resourced schools, with hiring expected to begin over the coming year. The schools serve roughly 6,000 students combined.",
+      "source": "Vox",
+      "link": "https://example.com/eval/opt_school_counselor_pledge",
+      "is_reddit_article": false
+    },
+    "optimism": 0.4,
+    "notes": "Promising and reasonably concrete, but still a pledge with hiring not yet underway; outcome and durability unproven. Low-mid."
+  },
+  {
+    "id": "opt_marriage_ruling",
+    "description": "top court legalizes same-sex marriage nationwide",
+    "article": {
+      "title": "Top court legalizes same-sex marriage nationwide",
+      "summary": "A country's highest court ruled that denying marriage rights to same-sex couples is unconstitutional, immediately extending legal marriage and its protections to millions of people nationwide.",
+      "source": "Vox",
+      "link": "https://example.com/eval/opt_marriage_ruling",
+      "is_reddit_article": false
+    },
+    "optimism": 0.9,
+    "notes": "Sweeping, immediate expansion of civil rights to millions — exactly the progressive advance the criteria prizes. Top tier."
+  },
+  {
+    "id": "opt_food_bank_expand",
+    "description": "community food bank opens a second site",
+    "article": {
+      "title": "Community food bank opens second location to reach 150 more families",
+      "summary": "A volunteer-run food bank opened a second distribution site this month after two years of fundraising, expanding its reach to an estimated 150 additional families in a neighboring town. Organizers say demand has grown steadily through the year.",
+      "source": "Block Club Chicago",
+      "link": "https://example.com/eval/opt_food_bank_expand",
+      "is_reddit_article": false
+    },
+    "optimism": 0.6,
+    "notes": "Solid, concrete community-helping outcome, but modest in scale and partly a response to rising need. Comfortably mid-range."
+  },
+  {
+    "id": "opt_ubi_pilot",
+    "description": "small guaranteed-income pilot shows early, unproven promise",
+    "article": {
+      "title": "Small guaranteed-income pilot reports early gains for 25 families",
+      "summary": "A pilot program giving 25 low-income families $500 a month reported that, after six months, recipients were more likely to be in stable housing and full-time work, though researchers cautioned the sample is tiny and the study is not yet complete.",
+      "source": "Vox",
+      "link": "https://example.com/eval/opt_ubi_pilot",
+      "is_reddit_article": false
+    },
+    "optimism": 0.45,
+    "notes": "Promising direction and a real intervention, but tiny sample, early results, and explicit caveats keep this below the midpoint despite the hopeful framing."
   }
 ]
