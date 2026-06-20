@@ -232,3 +232,72 @@ delivered" stories (pledges, grants, pilots) the model still floors around 0.55
 - **Know when to stop.** At 13/20 I stopped tuning the prompt: chasing the last
   few cases would have meant overfitting the prompt to my 20 specific labels
   rather than improving real calibration.
+
+---
+
+## 2026-06-20 — A JSON-schema grammar and a model's reasoning format can fight each other, and the structured fields hide it
+
+**Context.** I run the optimism eval against a local model swapped by
+(un)commenting a `CHAT_MODEL` line in [`config.py`](src/good_news/config.py).
+Under Qwen it cost ~100–200 tokens per article; switching to a Gemma-4 build it
+ballooned to ~8000, then started *failing* with `json.loads` errors like
+`Unterminated string`. `classify()` constrains output with a `json_schema`
+grammar (`response_format`).
+
+**Finding.** A four-layer onion, each layer masking the next:
+
+1. The reasoning-disable knobs were Qwen-only. `/no_think` and
+   `chat_template_kwargs.enable_thinking` are Qwen3 conventions; Gemma silently
+   ignores both, so it reasoned freely.
+2. The failures weren't reasoning leakage — `reasoning_content` was empty and the
+   garbage was *inside* the JSON's `reason` string, repeating one token
+   (`progress-progress-…`) until the cap truncated it. A `frequency_penalty`
+   didn't fix it; it just diversified the loop into multilingual word-salad
+   (`solidifyingify`, a stray `고`), which ruled out "simple repetition."
+3. The tell was *where* it broke: `category`, `optimism`, the booleans all came
+   out perfect — only the one free-text field degenerated. The grammar was
+   holding up the constrained fields and exposing the model only where it had
+   freedom.
+4. Root cause, found by probing the raw API (`scripts/diagnose_gemma.py`,
+   `scripts/check_no_think.py`): this Gemma build is a reasoning model that emits
+   a `<|channel>thought` block *before* its answer. The `json_schema` grammar
+   only permits JSON tokens, so it *forbids* that thought block, forcing the
+   model cold into `{` off-distribution — where the low-bit quant derails in the
+   free-text field. Without the grammar the model reasoned coherently. So the
+   grammar wasn't *constraining* the model, it was *fighting its output format*.
+
+**Action.** Made the reasoning toggle model-family-aware in
+[`llm.py`](src/good_news/llm.py): `_model_family()` reads `CHAT_MODEL`, and
+`think_extra_body()` sends `enable_thinking` for Qwen but `reasoning_effort:
+"none"` for Gemma — the one flag a strategy-matrix probe found that actually
+silences its `<|channel>thought` (verified `clean`/`finish=stop`). With reasoning
+off the model answers directly, stays on-distribution, and the existing grammar
+behaves. Hardened the parse as a backstop: `verdict_json()` strips any leaked
+reasoning, extracts the outermost `{...}`, and returns `""` on a truncated reply
+so a cap hit reports plainly instead of throwing a cryptic `json.loads` error.
+
+**Result.** One config-driven branch fixed cost, garbage, and the parse errors
+together, because they were all the same root cause. The Qwen path is unchanged;
+the Gemma path goes straight to a clean verdict. The `frequency_penalty` I added
+mid-investigation turned out to be treating a symptom and could be reverted once
+the real fix landed.
+
+**Takeaway.**
+
+- **Grammar-constrained decoding and a model's native output format can be
+  incompatible.** A channel/reasoning model expects to emit a thought block
+  first; a schema grammar that forbids it forces a cold start that low-bit quants
+  can't survive. When structured output degenerates, test the *same prompt
+  without the grammar* — if free-form is coherent, the grammar is the suspect.
+- **Constrained fields hide model failure; the free-text field is your canary.**
+  Perfect enums/numbers next to one garbage string field means the grammar is
+  masking incoherence, not preventing it. Don't read "valid JSON" as "the model
+  is fine."
+- **Per-vendor capability flags don't transfer.** `enable_thinking` (Qwen) vs
+  `reasoning_effort` (Gemma) do the same job under different names; key the
+  request off a detected model family rather than assuming one knob works
+  everywhere. A short strategy-matrix probe beats guessing.
+- **Peel symptoms in order and resist fixing the visible one.** Cap → repetition
+  → word-salad → grammar/reasoning conflict were nested; each "fix" (raise cap,
+  add penalty) addressed a symptom and revealed the next layer. The real cause
+  was four steps below the first error message.
