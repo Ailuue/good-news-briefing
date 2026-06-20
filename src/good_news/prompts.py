@@ -26,15 +26,17 @@ WHAT COUNTS AS GOOD NEWS HERE
   organized generosity, solidarity, and volunteering.
 
 WHAT TO EXCLUDE (set is_good_news to false)
-- Pure luck with no human kindness at its core (lottery wins, finding money, freak good fortune).
-  Mark is_pure_luck true. Allow such a story ONLY if its heart is people choosing to help other
-  people, in which case category is community_helping.
+- Pure luck with no human kindness at its core (lottery wins, finding money, freak good fortune, 
+  a pet returning home). Mark is_pure_luck true. Allow such a story ONLY if its heart is people 
+  choosing to help other people, in which case category is community_helping.
 - Corporate self-congratulation: PR-driven "good deeds", greenwashing, an executive's charitable
   gesture that mainly serves the brand. Mark is_corporate_pr true.
 - News that is good for a company, market, or executive but neutral-to-bad for ordinary people or
   workers (record profits, stock jumps, splashy product launches).
 - Negative, fear-driven, or simply neutral news.
 - Framing settled injustices as mere "controversy" or "both sides".
+- Debates or discussions of disagreement where a good outcome hasn't actually been reached, or 
+  isn't at least close to being reached. 
 
 SCORING
 - optimism is 0.0 to 1.0: how genuinely uplifting and substantive the good is. A small but real
