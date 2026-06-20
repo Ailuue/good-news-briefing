@@ -52,14 +52,32 @@ BASE_URL = f"http://{PC_HOST}:1234/v1"
 # leaves room for context + the embedding model. Copy the EXACT ids from the
 # LM Studio server panel after loading each model.
 CHAT_MODEL = "unsloth/qwen3.6-35b-a3b"  # load the IQ4_XS (or MTP) GGUF in LM Studio
+# CHAT_MODEL = "google/gemma-4-26b-a4b"  # load the Q4_K_M (or MTP) GGUF in LM Studio
 EMBED_MODEL = (
     "text-embedding-qwen3-embedding-0.6b"  # tiny; co-loads with the chat model fine
 )
 
-# Qwen3 reasoning toggle. False appends "/no_think" so the model skips reasoning
-# tokens -- much faster, which is what you want for high-volume classification.
-# Set True only if you ever want it to deliberate (slower).
+# Reasoning toggle. False makes the model skip reasoning tokens -- much faster,
+# which is what you want for high-volume classification. Set True only if you
+# ever want it to deliberate (slower).
+#
+# How "off" is enforced is model-specific (see llm.think_extra_body): Qwen3
+# reads enable_thinking, Gemma-4 ignores that and honours reasoning_effort
+# instead. CLASSIFY_MAX_TOKENS below bounds the cost if a model reasons anyway.
 THINKING = False
+
+# Hard cap on a single classify() completion. A verdict is a few hundred tokens,
+# so this is a runaway guard, not a normal limit -- it bounds the damage when a
+# model degenerates (see below) instead of letting it burn thousands of tokens.
+CLASSIFY_MAX_TOKENS = 2000
+
+# Repetition penalty for classify(). At temperature=0 (greedy decoding) some
+# models/quants fall into a degenerate loop, repeating a token until the cap
+# fires and truncates the JSON (Gemma Q4_K_M does this; Qwen doesn't). A small
+# frequency_penalty nudges the logits off the repeated token and breaks the
+# loop. It adjusts logits *before* the argmax, so scoring stays deterministic.
+# 0.0 disables it; raise toward 1.0 if a model still loops.
+CLASSIFY_FREQUENCY_PENALTY = 0.6
 # Thinking is always disabled for the digest: it's creative writing, not analysis,
 # so reasoning tokens waste budget without improving output.
 DIGEST_THINKING = False

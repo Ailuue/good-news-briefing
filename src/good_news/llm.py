@@ -12,38 +12,79 @@ from typing import Any, cast
 from openai import OpenAI
 
 from . import config
-from .guardrails import answer_text, message_text, restore_links
+from .guardrails import answer_text, restore_links, verdict_json
 from .models import Article, Verdict
 from .prompts import CRITERIA, DIGEST_PROMPT, VERDICT_SCHEMA
 
 client = OpenAI(base_url=config.BASE_URL, api_key="lm-studio")  # key can be anything
 
 
-def think_suffix() -> str:
-    """Qwen3: '/no_think' at the end of a prompt disables reasoning tokens."""
-    return "" if config.THINKING else " /no_think"
+def _model_family() -> str:
+    """Which reasoning-control dialect config.CHAT_MODEL speaks.
 
-
-def think_extra_body() -> dict[str, Any]:
-    """Server-side thinking toggle for Qwen3 over the OpenAI API.
-
-    The '/no_think' prompt suffix is unreliable on some Qwen3.6 builds, so also
-    pass the chat template's `enable_thinking` flag, which the server applies
-    when rendering the prompt. Belt-and-suspenders with think_suffix().
+    Switching models is done by (un)commenting a CHAT_MODEL line in config, so
+    we detect the family from that id at call time -- no separate setting to
+    keep in sync. The '/no_think' suffix and `enable_thinking` flag below are
+    Qwen3-specific; Gemma and others ignore both, so we must not send them or a
+    Gemma run reasons freely (~8000 tokens/article instead of ~100-200).
     """
-    return {"chat_template_kwargs": {"enable_thinking": config.THINKING}}
+    model = config.CHAT_MODEL.lower()
+    if "qwen" in model:
+        return "qwen"
+    if "gemma" in model:
+        return "gemma"
+    return "other"
+
+
+def think_suffix(thinking: bool) -> str:
+    """Prompt-level reasoning toggle. Only Qwen3 reads '/no_think'."""
+    if thinking or _model_family() != "qwen":
+        return ""
+    return " /no_think"
+
+
+def think_extra_body(thinking: bool) -> dict[str, Any]:
+    """Server-side reasoning toggle over the OpenAI API, per model family.
+
+    Each family disables reasoning differently (verified with
+    scripts/check_no_think.py):
+
+    - Qwen3 reads the chat template's `enable_thinking` flag. (The '/no_think'
+      suffix from think_suffix() is the unreliable belt to this suspenders.)
+    - Gemma-4 ignores `enable_thinking` entirely and instead honours the OpenAI
+      `reasoning_effort` param; "none" suppresses its <|channel>thought block.
+      This matters beyond cost: with reasoning on, the json_schema grammar
+      forbids the thought block, forcing the model cold into JSON, where it
+      derails into garbage in the free-text `reason` field. Reasoning off, it
+      answers directly and the grammar behaves.
+
+    Other families have no known toggle, so send nothing.
+    """
+    family = _model_family()
+    if family == "qwen":
+        return {"chat_template_kwargs": {"enable_thinking": thinking}}
+    if family == "gemma":
+        return {} if thinking else {"reasoning_effort": "none"}
+    return {}
 
 
 def classify(article: Article) -> Verdict | None:
     """Judge one article against CRITERIA, returning None on any failure."""
     user = (
         f"SOURCE: {article.source}\nTITLE: {article.title}\n"
-        f"SUMMARY: {article.summary}{think_suffix()}"
+        f"SUMMARY: {article.summary}{think_suffix(config.THINKING)}"
     )
     try:
         resp = client.chat.completions.create(
             model=config.CHAT_MODEL,
             temperature=0,
+            # Breaks the greedy-decoding repetition loop that makes some quants
+            # (e.g. Gemma Q4_K_M) spam one token until the cap truncates the JSON.
+            frequency_penalty=config.CLASSIFY_FREQUENCY_PENALTY,
+            # Runaway guard: a verdict is a few hundred tokens, but a degenerating
+            # model can emit thousands. Bound it so one bad article can't stall
+            # the whole run.
+            max_tokens=config.CLASSIFY_MAX_TOKENS,
             messages=[
                 {"role": "system", "content": CRITERIA},
                 {"role": "user", "content": user},
@@ -53,9 +94,21 @@ def classify(article: Article) -> Verdict | None:
             response_format=cast(
                 Any, {"type": "json_schema", "json_schema": VERDICT_SCHEMA}
             ),
-            extra_body=think_extra_body(),
+            extra_body=think_extra_body(config.THINKING),
         )
-        return Verdict.from_json(json.loads(message_text(resp.choices[0].message)))
+        choice = resp.choices[0]
+        text = verdict_json(choice.message)
+        if not text:
+            why = (
+                f"hit the {config.CLASSIFY_MAX_TOKENS}-token cap mid-output "
+                "(the model likely reasoned first; disable thinking or raise "
+                "CLASSIFY_MAX_TOKENS)"
+                if choice.finish_reason == "length"
+                else "no JSON verdict in the reply"
+            )
+            print(f"  ! classify failed: {why}", file=sys.stderr)
+            return None
+        return Verdict.from_json(json.loads(text))
     except Exception as e:
         print(f"  ! classify failed: {e}", file=sys.stderr)
         return None
@@ -67,15 +120,10 @@ def embed(texts: list[str]) -> list[list[float]]:
 
 
 def write_digest(items: list[Article]) -> str:
-    no_think_suffix = "" if config.DIGEST_THINKING else " /no_think"
-    no_think_body = {"chat_template_kwargs": {"enable_thinking": config.DIGEST_THINKING}}
-    payload = (
-        "\n\n".join(
-            f"[{it.category}] {it.title}\n{it.reason}\n@@{i}@@"
-            for i, it in enumerate(items, 1)
-        )
-        + no_think_suffix
-    )
+    payload = "\n\n".join(
+        f"[{it.category}] {it.title}\n{it.reason}\n@@{i}@@"
+        for i, it in enumerate(items, 1)
+    ) + think_suffix(config.DIGEST_THINKING)
     resp = client.chat.completions.create(
         model=config.CHAT_MODEL,
         temperature=0.7,
@@ -84,7 +132,7 @@ def write_digest(items: list[Article]) -> str:
             {"role": "system", "content": DIGEST_PROMPT},
             {"role": "user", "content": payload},
         ],
-        extra_body=no_think_body,
+        extra_body=think_extra_body(config.DIGEST_THINKING),
     )
     choice = resp.choices[0]
     text = answer_text(choice.message)
