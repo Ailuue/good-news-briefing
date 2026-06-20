@@ -128,6 +128,21 @@ Runs `classify()` against 25 hand-labeled articles and reports per-field
 accuracy. Use this after editing `CRITERIA` to check for regressions. Exit
 code is non-zero if any case fails.
 
+**Optimism eval** (requires LM Studio running):
+
+```bash
+python evals/run_optimism_eval.py             # summary — failures only
+python evals/run_optimism_eval.py --verbose   # show all cases including passes
+```
+
+An agentic eval: each article in `evals/optimism_fixtures.json` carries a
+reference `optimism` score (0.0–1.0) assigned by an agent reading it against
+`CRITERIA`, not a hard ground-truth label. The runner scores the model's
+`optimism` against that reference and passes a case when they agree within
+±0.1, also reporting mean absolute error and whether the model skews
+optimistic or pessimistic. Exit code is non-zero if any case falls outside the
+tolerance.
+
 ## Scripts
 
 `scripts/check_no_think.py` — verifies that `/no_think` and `enable_thinking:false`
