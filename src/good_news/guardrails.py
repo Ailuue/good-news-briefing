@@ -33,6 +33,25 @@ def message_text(msg: Any) -> str:
 _THINK_RE = re.compile(r"<think>.*?</think>", re.DOTALL)
 
 
+# The outermost {...} in a string. Greedy + DOTALL so it spans a multi-line,
+# pretty-printed object from the first brace to the last.
+_JSON_OBJ_RE = re.compile(r"\{.*\}", re.DOTALL)
+
+
+def verdict_json(msg: Any) -> str:
+    """Pull a complete JSON verdict out of a reply, ignoring leaked reasoning.
+
+    A reasoning build may prepend a <think>...</think> block (or stray prose)
+    before the JSON; we strip that and grab the outermost {...}. Returns "" when
+    there is no *complete* object -- e.g. the token cap fired mid-JSON, leaving
+    an unterminated string -- so the caller can report truncation instead of
+    handing json.loads a fragment and getting a cryptic parse error.
+    """
+    raw = _THINK_RE.sub("", message_text(msg)).strip()
+    m = _JSON_OBJ_RE.search(raw)
+    return m.group(0) if m else ""
+
+
 def answer_text(msg: Any) -> str:
     """The model's FINAL answer only -- never its reasoning.
 
