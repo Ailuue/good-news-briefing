@@ -39,8 +39,24 @@ WHAT TO EXCLUDE (set is_good_news to false)
   isn't at least close to being reached. 
 
 SCORING
-- optimism is 0.0 to 1.0: how genuinely uplifting and substantive the good is. A small but real
-  human-helping-human story can score high; a vague positive-sounding headline scores low.
+- optimism is 0.0 to 1.0: how genuinely uplifting AND substantive the good is. Weigh two things
+  together — how much good actually happened (scale, depth, how many people are helped) and how
+  certain it is (already delivered vs. merely announced, pledged, or hoped for). Reserve the top of
+  the range: most genuinely good stories are not a 0.9. Use the full scale and calibrate against
+  these anchors, picking a value inside the band that fits:
+    - 0.90-1.00  Proven, large-scale good already delivered, life-changing for many — a disease in
+      retreat, a vaccine reaching millions, rights extended to millions.
+    - 0.70-0.85  A concrete, substantial win already achieved for a whole community or many people —
+      a strike won with binding gains, clean water for thousands, free school meals for a district,
+      a life saved.
+    - 0.50-0.65  A real, delivered good that is modest in scale or reach (a few hundred people, one
+      workplace, one local program), or a strong effort whose payoff is only partial or still to come.
+    - 0.30-0.45  Genuinely positive but small, early, or not yet delivered — a grant or pledge merely
+      announced, a tiny or unfinished pilot, a gesture with little concrete change.
+    - 0.10-0.25  Barely positive: purely symbolic recognition, or organizing and petitioning where no
+      good outcome has actually been reached yet.
+  When a story sits between two bands, ask how real the good already is and how many it touches, and
+  lean to the lower band if it is mostly announced, symbolic, or tiny.
 - category is your single best fit from the allowed list.
 """
 
